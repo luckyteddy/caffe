@@ -186,6 +186,11 @@ void GradientChecker<Dtype>::CheckGradientSingle(
             << "," << top_data_id << "," << blob_id << "," << feat_id
             << "; feat = " << feature << "; objective+ = " << positive_objective
             << "; objective- = " << negative_objective;
+         //if (computed_gradient != 0) {
+         //    LOG(ERROR) << "(top_id top_data_id blob_id feat_id)= " << top_id << "," << top_data_id << "," << blob_id << ","
+         //    << feat_id <<"; Computed gradient: " << computed_gradient << "; estimated_gradient: " << estimated_gradient
+         //    << endl;
+         //}
       }
       // LOG(ERROR) << "Feature: " << current_blob->cpu_data()[feat_id];
       // LOG(ERROR) << "computed gradient: " << computed_gradient

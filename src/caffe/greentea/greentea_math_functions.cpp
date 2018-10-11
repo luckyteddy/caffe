@@ -59,6 +59,10 @@
 #define VCL_COL_MAJOR
 #endif
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 namespace caffe {
 
 void greentea_memset(const int_tp ctx_id, const uint_tp N, const int_tp alpha,
@@ -263,6 +267,46 @@ void greentea_gpu_gemm(const int_tp ctx_id, const CBLAS_TRANSPOSE TransA,
           C, offC, ldc,
           &queue));
     }
+    if (0) {
+    //if (M != 1 || N != 1) {  
+    Dtype* Aptr = reinterpret_cast<Dtype*>(clEnqueueMapBuffer(
+        ctx.get_queue().handle().get(), A, true, CL_MAP_READ,
+        sizeof(Dtype) * offA, sizeof(Dtype) * M * K, 0, NULL, NULL, NULL));
+    Dtype* Bptr = reinterpret_cast<Dtype*>(clEnqueueMapBuffer(
+        ctx.get_queue().handle().get(), B, true, CL_MAP_READ,
+        sizeof(Dtype) * offB, sizeof(Dtype) * N * K, 0, NULL, NULL, NULL));
+    Dtype* Cptr = reinterpret_cast<Dtype*>(clEnqueueMapBuffer(
+        ctx.get_queue().handle().get(), C, true, CL_MAP_READ | CL_MAP_WRITE,
+        sizeof(Dtype) * offC, sizeof(Dtype) * M * N, 0, NULL, NULL, NULL));
+   cout << "In greentea_gpu_gemm"<< endl;
+   cout << "offA=" << offA << "; lda=" << lda << "; offB=" << offB 
+        << "; ldb=" << ldb << "; offC=" << offC << "; ldc=" << ldc 
+        << "; M=" << M << "; N=" << N << "; K=" << K 
+        << "; alpha=" << alpha << "; beta=" << beta << endl;
+   cout << "A dimension = " << M << "*" << K << endl;
+    for (int i = 0; i < M*K; ++i){
+      cout << Aptr[i] << " ";
+    }
+    cout << endl;
+    cout << "B dimension = " << K << "*" << N << endl;
+    for (int i = 0; i < K*N; ++i){
+      cout << Bptr[i] << " ";
+    }
+    cout << endl;
+    cout << "C dimension = " << M << "*" << N << endl;
+    for (int i = 0; i < M*N; ++i){
+      cout << Cptr[i] << " ";
+    }
+    cout << endl << endl;
+
+    clEnqueueUnmapMemObject(ctx.get_queue().handle().get(), A, Aptr, 0, NULL,
+    NULL);
+    clEnqueueUnmapMemObject(ctx.get_queue().handle().get(), B, Bptr, 0, NULL,
+    NULL);
+    clEnqueueUnmapMemObject(ctx.get_queue().handle().get(), C, Cptr, 0, NULL,
+    NULL);
+    }
+  
 
 #else  // default (ViennaCL)
 

@@ -754,20 +754,25 @@ TYPED_TEST(ConvolutionLayerTest, TestGradient3D) {
   ConvolutionParameter* convolution_param =
       layer_param.mutable_convolution_param();
   vector<int_tp> bottom_shape(5);
-  bottom_shape[0] = this->blob_bottom_vec_[0]->shape(0);
-  bottom_shape[1] = this->blob_bottom_vec_[0]->shape(1);
-  bottom_shape[2] = 5;
-  bottom_shape[3] = this->blob_bottom_vec_[0]->shape(2);
-  bottom_shape[4] = this->blob_bottom_vec_[0]->shape(3);
+  bottom_shape[0] = 1;
+  bottom_shape[1] = 1;
+  bottom_shape[2] = 3;
+  bottom_shape[3] = 3;
+  bottom_shape[4] = 3;
+  //bottom_shape[0] = this->blob_bottom_vec_[0]->shape(0);
+  //bottom_shape[1] = this->blob_bottom_vec_[0]->shape(1);
+  //bottom_shape[2] = 5;
+  //bottom_shape[3] = this->blob_bottom_vec_[0]->shape(2);
+  //bottom_shape[4] = this->blob_bottom_vec_[0]->shape(3);
   FillerParameter filler_param;
   GaussianFiller<Dtype> filler(filler_param);
   for (int_tp i = 0; i < this->blob_bottom_vec_.size(); ++i) {
     this->blob_bottom_vec_[i]->Reshape(bottom_shape);
     filler.Fill(this->blob_bottom_vec_[i]);
   }
-  convolution_param->add_kernel_size(3);
+  convolution_param->add_kernel_size(2);
   convolution_param->add_stride(2);
-  convolution_param->set_num_output(2);
+  convolution_param->set_num_output(1);
   convolution_param->mutable_weight_filler()->set_type("gaussian");
   convolution_param->mutable_bias_filler()->set_type("gaussian");
   ConvolutionLayer<Dtype> layer(layer_param);

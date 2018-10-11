@@ -143,6 +143,7 @@ __kernel void TEMPLATE(col2im_nd, Dtype)(const int_tp n, const int_tp num_axes,
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int_tp index = get_global_id(0); index < n; index += get_global_size(0)) {
+  //for (int_tp index = 0; index < n; index ++) {
     // Initialize channel_in, computed in the loop below, with intermediate
     // computations used to compute the spatial indices.
     int_tp c_im = index;
@@ -212,6 +213,7 @@ __kernel void TEMPLATE(col2im_nd, Dtype)(const int_tp n, const int_tp num_axes,
         }  // for (int_tp i = num_axes - 1; i >= 0; --i)
       } while (incremented);
       data_im[data_im_off + index] = val;
+      //data_im[data_im_off + index] = get_local_id(0);
     }
   }
 }

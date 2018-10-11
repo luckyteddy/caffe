@@ -7,6 +7,10 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/rng.hpp"
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 namespace caffe {
 
 template<>
@@ -17,8 +21,33 @@ void caffe_cpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
                            float* C) {
   int_tp lda = (TransA == CblasNoTrans) ? K : M;
   int_tp ldb = (TransB == CblasNoTrans) ? N : K;
+
+
   cblas_sgemm(CblasRowMajor, TransA, TransB, M, N, K, alpha, A, lda, B, ldb,
               beta, C, N);
+  
+  if (0) {
+  //if (TransA == 112 || TransB == 112 || 1 == 1) {
+  cout << "In caffe_cpu_gemm<float>" <<endl;
+  cout << "TransA=" << TransA << "; TransB=" << TransB << "; lda=" << lda << "; ldb=" << ldb 
+       << "; alpha=" << alpha << "; beta=" << beta << endl;
+  cout << "A dimention = " << M << "*" << K << endl;
+  for (int i = 0; i < M*K; ++i){
+    cout << A[i] << " ";   
+  }
+  cout << endl;
+  cout << "B dimention = " << K << "*" << N << endl;
+  for (int i = 0; i < N*K; ++i){
+    cout << B[i] << " ";   
+  }
+  cout << endl;
+  cout << "C dimention = " << M << "*" << N << endl;
+  for (int i = 0; i < M*N; ++i){
+    cout << C[i] << " ";   
+  }
+  cout << endl << endl;
+  } 
+
 }
 
 template<>
@@ -37,7 +66,22 @@ template<>
 void caffe_cpu_gemv<float>(const CBLAS_TRANSPOSE TransA, const int_tp M,
                            const int_tp N, const float alpha, const float* A,
                            const float* x, const float beta, float* y) {
+  //cout << "in caffe_cpu_gemv" << endl;
+  //cout << "A dimention = " << M << "*" << N << endl;
+  //for (int i = 0; i < M*N; ++i){
+  //  cout << A[i] << " ";
+  //}
+  //cout << endl;
+  //for (int i = 0; i < M; ++i){
+  //  cout << x[i] << " " << y[i] << ";";
+  //}
+  //cout << endl;
   cblas_sgemv(CblasRowMajor, TransA, M, N, alpha, A, N, x, 1, beta, y, 1);
+  //cout << "After sgemv" << endl;
+  //for (int i = 0; i < M; ++i){
+  //  cout << x[i] << " " << y[i] << ";";
+  //}
+  //cout << endl;
 }
 
 template<>
